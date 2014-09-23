@@ -1,5 +1,3 @@
-__author__ = 'krekle'
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -53,7 +51,7 @@ class Map:
             return 0
 
     def valid_tile(self, node):
-        if node.x >= 0 and node.y >= 0:
+        if node not in self.closed and node.x >= 0 and node.y >= 0:
             try:
                 temp = self.grid[node.y][node.x]
                 return True
@@ -62,28 +60,27 @@ class Map:
         else:
             return False
 
-
     def get_parents(self, node_coordinate):
         parents = []
-
-        parents.append([self.coords(node_coordinate.y-1, node_coordinate.x), 0]) #up
-        parents.append([self.coords(node_coordinate.y+1, node_coordinate.x), 0]) #down
-        parents.append([self.coords(node_coordinate.y, node_coordinate.x-1), 0]) #left
-        parents.append([self.coords(node_coordinate.y, node_coordinate.x+1), 0]) #right
+        parents.append([self.coords(node_coordinate.y-1, node_coordinate.x)]) #up
+        parents.append([self.coords(node_coordinate.y+1, node_coordinate.x)]) #down
+        parents.append([self.coords(node_coordinate.y, node_coordinate.x-1)]) #left
+        parents.append([self.coords(node_coordinate.y, node_coordinate.x+1)]) #right
 
         for i in range(len(parents)):
-            print(parents[i][0])
-            if parents[i][0] not in self.closed and self.valid_tile(parents[i][0]):
+            if self.valid_tile(parents[i][0]):
                 parents[i].append(int(self.manhattan_distance(parents[i][0])))
                 parents[i][1] += self.terrain_score(parents[i][0])
                 self.open.add(parents[i][0])
+            else:
+                parents[i].append(999)
+
         # Sorterer på vekt
         return sorted(parents, key=lambda x: x[1])
 
     def move_logical(self):
         moves = self.get_parents(self.current)
         print moves
-        raw_input("ds")
         if self.current.x == self.end.x and self.current.y == self.end.y:
             print("GRATTIS!")
             self.print_map()
@@ -104,7 +101,7 @@ class Map:
     @staticmethod
     def read_map():
         #name = str(raw_input('skriv inn bane: '))
-        name = 'board-1-4.txt'
+        name = 'board-2-2.txt'
         try:
             with open(name) as f:
                 return [list(i) for i in f.readlines()]
