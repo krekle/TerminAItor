@@ -4,7 +4,6 @@
 import codecs
 from collections import namedtuple
 from math import fabs
-from Tkinter import *
 
 
 class Map:
