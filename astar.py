@@ -239,7 +239,7 @@ class Run:
         self.board = None
         self.gui = gui
 
-        # Algorithm to use, default astar
+        # Algorithm to use, default = 0 -> astar
         self.algorithm = 0
     
     # Open a map file
@@ -391,8 +391,8 @@ class Gui(Tk):
     # Drawing the board
     def draw(self, grid, finished):
         # Kill if no grid was returned and finished flag is True
-        if (len(grid) == 0 and finished):
-            return;
+        if len(grid) is 0 and finished:
+            return
         
         # Avoid redrawing on top of the canvas
         if self.canvas is not None:
