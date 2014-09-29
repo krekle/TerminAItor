@@ -297,18 +297,14 @@ class Gui(Tk):
         
         # Set the title
         self.title("A* - Kristian Ekle & Thomas Gautvedt")
-        
-        # Reference to a new frame
-        self.parent = Frame()
-        self.parent.pack()
-        
+
         # Reference to a menu
         self.menubar = Menu(self)
         
         # Reference to the Run class, executing the algorithm
         self.run = Run(self)
         
-        # The sizof the squares
+        # The sizof the squares in the map
         self.sqsize = 30
         
         # Defining the colors for the icons
@@ -397,10 +393,9 @@ class Gui(Tk):
         # Avoid redrawing on top of the canvas
         if self.canvas is not None:
             self.canvas.pack_forget()
-            #self.canvas.destroy()
         
         # New canvas
-        self.canvas = Canvas(self, bg='white', width=500, height=500)
+        self.canvas = Canvas(self, bg='white', width=500, height=300)
 
         # Loop the grid
         for y in range(len(grid)):
@@ -415,7 +410,7 @@ class Gui(Tk):
                 current_node = grid[y][x]
                 
                 # Check if current Node is closed or not
-                if (current_node.closed == False):
+                if current_node.closed == False:
                     self.canvas.create_rectangle(left, top, right, bottom,
                                 outline="#ff0000",
                                 fill=self.icon.get(current_node.type))
@@ -432,7 +427,7 @@ class Gui(Tk):
         self.canvas.pack(fill=BOTH, expand=1)
         
         # Wait and redraw if not finished
-        if (finished == False):
+        if finished is False:
             self.after(self.delay, self.run.run)
 
     # Sidebar with information
@@ -460,6 +455,7 @@ Main method
 
 Executing the entire application
 """
+
 
 def main():
     # New instance of Gui
