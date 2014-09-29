@@ -393,9 +393,20 @@ class Gui(Tk):
         # Avoid redrawing on top of the canvas
         if self.canvas is not None:
             self.canvas.pack_forget()
-        
+
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(0, minsize=100)
+        self.columnconfigure(1, weight=7)
+        self.columnconfigure(1, minsize=500)
+
         # New canvas
         self.canvas = Canvas(self, bg='white', width=500, height=300)
+        self.canvas.grid(row=0, column=1)
+
+        #Fram with stats
+        self.stats = Frame(self)
+        self.stats.grid(row=0, column=0, sticky="n")
+        label2 = Label(self.stats, text="Heiheieiwe")
 
         # Loop the grid
         for y in range(len(grid)):
@@ -408,7 +419,7 @@ class Gui(Tk):
                 
                 # Store current Node
                 current_node = grid[y][x]
-                
+
                 # Check if current Node is closed or not
                 if current_node.closed == False:
                     self.canvas.create_rectangle(left, top, right, bottom,
@@ -424,14 +435,12 @@ class Gui(Tk):
                     self.canvas.create_oval(left, top, right, bottom, fill="#000")
         
         # Pack the canvas
-        self.canvas.pack(fill=BOTH, expand=1)
+        #Dont need to pack it
+        #self.canvas.pack(fill=BOTH, expand=1)
         
         # Wait and redraw if not finished
         if finished is False:
             self.after(self.delay, self.run.run)
-
-    # Sidebar with information
-    # here
 
     # Deciding what level to play
     def play_level(self, level):
