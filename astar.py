@@ -39,7 +39,7 @@ class Board:
         self.size_y = None
         
         # Algorithm to use
-        #0 = astar regular, 1 = BFS, 2 = Dijkstra
+        # 0 = astar regular, 1 = BFS, 2 = Dijkstra
         self.algorithm = algorithm
     
     # Calculate manhatten score for a given Node
@@ -98,15 +98,14 @@ class Board:
     
     # Sorts all the open Nodes on manhatten score
     def sort_open(self):
-        #Check what algorithm to sort by.
-        #QUEUE?? instead of set.
+        # Check what algorithm to sort by
         if self.algorithm is 0:
             self.open = sorted(self.open, key=lambda x: float(x.f))
         elif self.algorithm is 1:
-            #No sorting, FIFO
+            # No sorting, FIFO
             self.open = self.open # this is an important line
         else:
-            #Dijkstra, sort based on lowes G score, discard H
+            # Dijkstra, sort based on lowes G score, discard H
             self.open = sorted(self.open, key=lambda x: float(x.g))
 
     # Returns all parents for the current Node
@@ -323,59 +322,91 @@ class Gui(Tk):
         # How long we should wait between each redraw
         self.delay = 20
         
+        # Radiobuttons
+        self.v1 = None
+        self.v2 = None
+        self.v3 = None
+        
         # Populate the menues
         self.populate_menu()
     
     # Populates the menu
     def populate_menu(self):
+        # Dummy
+        self.v1 = IntVar()
+        self.v2 = IntVar()
+        self.v2.set(1)
+        self.v3 = IntVar()
+        self.v3.set(1)
+        
+        
         # Create a pulldown menu for chosing what level to play
         self.filemenu = Menu(self.menubar, tearoff=0)
-        self.filemenu.add_command(label="Board-1-1",
-                                  command=lambda: self.play_level('board-1-1.txt'))
-        self.filemenu.add_command(label="Board-1-2",
-                                  command=lambda: self.play_level('board-1-2.txt'))
-        self.filemenu.add_command(label="Board-1-3",
-                                  command=lambda: self.play_level('board-1-3.txt'))
-        self.filemenu.add_command(label="Board-1-4",
-                                  command=lambda: self.play_level('board-1-4.txt'))
+        self.filemenu.add_radiobutton(label="Board-1-1",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-1-1.txt'))
+        self.filemenu.add_radiobutton(label="Board-1-2",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-1-2.txt'))
+        self.filemenu.add_radiobutton(label="Board-1-3",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-1-3.txt'))
+        self.filemenu.add_radiobutton(label="Board-1-4",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-1-4.txt'))
         self.filemenu.add_separator()
-        self.filemenu.add_command(label="Board-2-1",
-                                  command=lambda: self.play_level('board-2-1.txt'))
-        self.filemenu.add_command(label="Board-2-2",
-                                  command=lambda: self.play_level('board-2-2.txt'))
-        self.filemenu.add_command(label="Board-2-3",
-                                  command=lambda: self.play_level('board-2-3.txt'))
-        self.filemenu.add_command(label="Board-2-4",
-                                  command=lambda: self.play_level('board-2-4.txt'))
-        self.filemenu.add_separator()
+        self.filemenu.add_radiobutton(label="Board-2-1",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-2-1.txt'))
+        self.filemenu.add_radiobutton(label="Board-2-2",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-2-2.txt'))
+        self.filemenu.add_radiobutton(label="Board-2-3",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-2-3.txt'))
+        self.filemenu.add_radiobutton(label="Board-2-4",
+                                      variable = self.v1,
+                                      command=lambda: self.play_level('board-2-4.txt'))
         self.menubar.add_cascade(label="Boards", menu=self.filemenu)
 
         # Create a pulldown menu for chosing what algorithm to use
         self.algmenu = Menu(self.menubar, tearoff=0)
-        self.algmenu.add_command(label="Manhattan Distance",
-                                 command=lambda: self.play_level('manhattan distance'))
-        self.algmenu.add_command(label="Euclid",
-                                 command=lambda: self.play_level('euclid something'))
-        self.algmenu.add_separator()
-        self.algmenu.add_command(label="Astar",
-                                 command=lambda: self.choose_algorithm(0))
-        self.algmenu.add_command(label="BFS",
-                                 command=lambda: self.choose_algorithm(1))
-        self.algmenu.add_command(label="Dijkstra",
-                                 command=lambda: self.choose_algorithm(2))
-        self.algmenu.add_separator()
+        self.algmenu.add_radiobutton(label="Astar",
+                                     variable = self.v2,
+                                     value = 1,
+                                     command=lambda: self.choose_algorithm(0))
+        self.algmenu.add_radiobutton(label="BFS",
+                                     variable = self.v2,
+                                     command=lambda: self.choose_algorithm(1))
+        self.algmenu.add_radiobutton(label="Dijkstra",
+                                     variable = self.v2,
+                                     command=lambda: self.choose_algorithm(2))
         self.menubar.add_cascade(label="Algorithms", menu=self.algmenu)
         
         # Create a pulldown menu for chosing delays
         self.delaymenu = Menu(self.menubar, tearoff=0)
-        self.delaymenu.add_command(label="No delay", command=lambda: self.set_delay('0'))
-        self.delaymenu.add_command(label="20ms", command=lambda: self.set_delay('20'))
-        self.delaymenu.add_command(label="50ms", command=lambda: self.set_delay('50'))
-        self.delaymenu.add_command(label="100ms", command=lambda: self.set_delay('100'))
-        self.delaymenu.add_command(label="200ms", command=lambda: self.set_delay('200'))
-        self.delaymenu.add_command(label="500ms", command=lambda: self.set_delay('500'))
-        self.delaymenu.add_command(label="1 sec", command=lambda: self.set_delay('1000'))
-        self.delaymenu.add_separator()
+        self.delaymenu.add_radiobutton(label="No delay",
+                                       variable = self.v3,
+                                       value = 1,
+                                       command=lambda: self.set_delay('0'))
+        self.delaymenu.add_radiobutton(label="20ms",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('20'))
+        self.delaymenu.add_radiobutton(label="50ms",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('50'))
+        self.delaymenu.add_radiobutton(label="100ms",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('100'))
+        self.delaymenu.add_radiobutton(label="200ms",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('200'))
+        self.delaymenu.add_radiobutton(label="500ms",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('500'))
+        self.delaymenu.add_radiobutton(label="1 sec",
+                                       variable = self.v3,
+                                       command=lambda: self.set_delay('1000'))
         self.menubar.add_cascade(label="Delay", menu=self.delaymenu)
         
         # Menu element for closing the application
@@ -393,21 +424,10 @@ class Gui(Tk):
         # Avoid redrawing on top of the canvas
         if self.canvas is not None:
             self.canvas.pack_forget()
-
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(0, minsize=100)
-        self.columnconfigure(1, weight=7)
-        self.columnconfigure(1, minsize=500)
-
+        
         # New canvas
-        self.canvas = Canvas(self, bg='white', width=500, height=300)
-        self.canvas.grid(row=0, column=1)
-
-        #Fram with stats
-        self.stats = Frame(self)
-        self.stats.grid(row=0, column=0, sticky="n")
-        label2 = Label(self.stats, text="Heiheieiwe")
-
+        self.canvas = Canvas(self, bg='white')
+        
         # Loop the grid
         for y in range(len(grid)):
             for x in range(len(grid[y])):
@@ -419,7 +439,7 @@ class Gui(Tk):
                 
                 # Store current Node
                 current_node = grid[y][x]
-
+                
                 # Check if current Node is closed or not
                 if current_node.closed == False:
                     self.canvas.create_rectangle(left, top, right, bottom,
@@ -434,9 +454,8 @@ class Gui(Tk):
                 if grid[y][x].on_path:
                     self.canvas.create_oval(left, top, right, bottom, fill="#000")
         
-        # Pack the canvas
-        #Dont need to pack it
-        #self.canvas.pack(fill=BOTH, expand=1)
+        # Pack
+        self.canvas.pack(fill=BOTH, expand=1)
         
         # Wait and redraw if not finished
         if finished is False:
