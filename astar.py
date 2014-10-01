@@ -16,6 +16,7 @@ Board class
 Consists of all a matrix of Nodes
 """
 
+
 class Board:
     # Constructor
     def __init__(self, gui, algorithm):
@@ -47,7 +48,8 @@ class Board:
         return fabs(self.goal.x - node.x) + fabs(self.goal.y - node.y)
     
     # Calculate terrain score (if any) for a given Node
-    def terrain_score(self, node):
+    @staticmethod
+    def terrain_score(node):
         score = {'w': 100, 'm': 50, 'f': 10, 'g': 5, 'r': 1}
         return score.get(node.type, 0)
     
@@ -91,7 +93,7 @@ class Board:
             self.size_y = len(self.board) - 1
         
         # Define variables for the start Node
-        if (len(self.open) > 0):
+        if len(self.open) > 0:
             self.open[0].g = 0
             self.open[0].f = self.manhattan_distance(self.open[0]) + self.terrain_score(self.open[0])
             self.open[0].on_path = True
@@ -114,13 +116,13 @@ class Board:
         parents = []
         
         # Get valid parents that are in the map
-        if (node.y > 0): # Up
+        if node.y > 0: # Up
             parents.append(self.board[node.y - 1][node.x])
-        if (node.y < self.size_y): # Down
+        if node.y < self.size_y: # Down
             parents.append(self.board[node.y + 1][node.x])
-        if (node.x > 0): # Left
+        if node.x > 0: # Left
             parents.append(self.board[node.y][node.x - 1])
-        if (node.x < self.size_x): # Right
+        if node.x < self.size_x: # Right
             parents.append(self.board[node.y][node.x + 1])
         
         # Return list of parents
@@ -281,6 +283,7 @@ Gui class
 The class creating a visual gui for the algorithm solving the problem
 """
 
+
 class Gui(Tk):
     # Constructor
     def __init__(self, *args, **kwargs):
@@ -338,8 +341,7 @@ class Gui(Tk):
         self.v2.set(1)
         self.v3 = IntVar()
         self.v3.set(1)
-        
-        
+
         # Create a pulldown menu for chosing what level to play
         self.filemenu = Menu(self.menubar, tearoff=0)
         self.filemenu.add_radiobutton(label="Board-1-1",
@@ -441,7 +443,7 @@ class Gui(Tk):
                 current_node = grid[y][x]
                 
                 # Check if current Node is closed or not
-                if current_node.closed == False:
+                if current_node.closed is False:
                     self.canvas.create_rectangle(left, top, right, bottom,
                                 outline="#ff0000",
                                 fill=self.icon.get(current_node.type))
